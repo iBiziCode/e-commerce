@@ -33,3 +33,23 @@ exports.login = asyncHandler(async (req, res) => {
     );
 
 });
+
+exports.getMe = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+});
+
+exports.logout = asyncHandler(async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfully.",
+  });
+});
