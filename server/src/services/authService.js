@@ -43,6 +43,28 @@ const registerUser = async ({
   return user;
 };
 
+const loginUser = async ({ email, password }) => {
+  if (!email || !password) {
+    throw new AppError("Email and password are required.", 400);
+  }
+
+  const user = await findUserByEmail(email);
+
+  if (!user) {
+    throw new AppError("Invalid email or password.", 401);
+  }
+
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
+    throw new AppError("Invalid email or password.", 401);
+  }
+  delete user.password;
+
+  return user;
+}
+
 module.exports = {
   registerUser,
+  loginUser,
 };
